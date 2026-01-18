@@ -12,11 +12,12 @@ export default function CalcForm({ config }: Props) {
     const [dados, setDados] = useState({
         tamArea: 10,
         volumeEfetivo: 12,
+        areaDificil: false,
     });
 
     function set<K extends keyof typeof dados>(
         key: K,
-        value: number
+        value: typeof dados[K]
     ) {
         setDados((d) => ({ ...d, [key]: value }));
     }
@@ -27,7 +28,6 @@ export default function CalcForm({ config }: Props) {
         <section className="rounded-lg bg-white p-4 shadow">
             <h2 className="mb-4 font-semibold">Cálculo</h2>
 
-            {/* Inputs */}
             <div className="space-y-3">
                 <Input
                     label="Área total"
@@ -42,23 +42,34 @@ export default function CalcForm({ config }: Props) {
                     onChange={(v) => set("volumeEfetivo", v)}
                     suffix="L/ha"
                 />
+
+                <label className="flex items-center gap-2 text-sm">
+                    <input
+                        type="checkbox"
+                        checked={dados.areaDificil}
+                        onChange={(e) =>
+                            set("areaDificil", e.target.checked)
+                        }
+                    />
+                    Área difícil
+                </label>
             </div>
 
-            {/* Resultado detalhado */}
             <div className="mt-6 rounded bg-zinc-100 p-4 text-sm space-y-2">
-                <div className="font-semibold text-center text-base">
+                <div className="font-semibold text-center">
                     Detalhamento do preço
                 </div>
 
                 <div>
-                    Área considerada: <strong>{resultado.tamanhoArea}</strong>
+                    Tamanho da área:{" "}
+                    <strong>{resultado.tamanhoArea}</strong>
                 </div>
 
                 <div>
-                    Valor base por hectare: R$ {resultado.basePorHa}
+                    Valor base: R$ {resultado.basePorHa} / ha
                 </div>
 
-                {config.areaDificil && (
+                {dados.areaDificil && (
                     <div>
                         Adicional por dificuldade (
                         {config.modAreaDificil}%):{" "}
@@ -79,12 +90,12 @@ export default function CalcForm({ config }: Props) {
 
                 <hr />
 
-                <div className="text-base font-semibold">
-                    Preço final por hectare: R$ {resultado.precoFinalPorHa}
+                <div className="font-semibold">
+                    Preço final: R$ {resultado.precoFinalPorHa} / ha
                 </div>
 
                 <div className="text-lg font-bold text-center">
-                    Valor total do serviço: R$ {resultado.total}
+                    Total: R$ {resultado.total}
                 </div>
             </div>
         </section>

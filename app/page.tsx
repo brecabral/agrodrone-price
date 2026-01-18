@@ -8,7 +8,6 @@ import { Config } from "@/lib/pricing";
 const STORAGE_KEY = "pricing-config";
 
 const defaultConfig: Config = {
-  areaDificil: false,
   modAreaDificil: 10,
   volumePadrao: 12,
   adicionalLitro: 10,
@@ -40,8 +39,11 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-md space-y-8 p-4">
       <h1 className="text-xl font-semibold">
-        Precificação com Drone Agrícola
+        Drones Agrícolas
       </h1>
+      <h2 className="text-xl font-semibold">
+        Precificação para pulverizações
+      </h2>
 
       <ConfigForm config={config} onChange={setConfig} />
       <CalcForm config={config} />

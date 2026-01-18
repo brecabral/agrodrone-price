@@ -1,5 +1,4 @@
 export type Config = {
-  areaDificil: boolean;          // ← AGORA AQUI
   modAreaDificil: number;
   volumePadrao: number;
   adicionalLitro: number;
@@ -13,6 +12,7 @@ export type Config = {
 export type Dados = {
   tamArea: number;
   volumeEfetivo: number;
+  areaDificil: boolean;
 };
 
 export type DetalheCalculo = {
@@ -29,28 +29,25 @@ export function calcularPreco(
   dados: Dados
 ): DetalheCalculo {
   let base = config.precoAreaG;
-  let areaEfetiva = "Grande"
+  let areaEfetiva = "Grande";
 
   if (dados.tamArea <= config.tamAreaP) {
     base = config.precoAreaP;
-    areaEfetiva = "Pequena"
-  }
-  else if (dados.tamArea <= config.tamAreaM) {
+    areaEfetiva = "Pequena";
+  } else if (dados.tamArea <= config.tamAreaM) {
     base = config.precoAreaM;
-    areaEfetiva = "Média"
+    areaEfetiva = "Média";
   }
 
-  let adicionalDificuldade = 0;
-  if (config.areaDificil) {
-    adicionalDificuldade = base * (config.modAreaDificil / 100);
-  }
+  const adicionalDificuldade = dados.areaDificil
+    ? base * (config.modAreaDificil / 100)
+    : 0;
 
-  let adicionalVolume = 0;
-  if (dados.volumeEfetivo > config.volumePadrao) {
-    adicionalVolume =
-      (dados.volumeEfetivo - config.volumePadrao) *
-      config.adicionalLitro;
-  }
+  const adicionalVolume =
+    dados.volumeEfetivo > config.volumePadrao
+      ? (dados.volumeEfetivo - config.volumePadrao) *
+        config.adicionalLitro
+      : 0;
 
   const precoFinalPorHa = Math.round(
     base + adicionalDificuldade + adicionalVolume

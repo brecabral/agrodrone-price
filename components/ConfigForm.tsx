@@ -9,7 +9,10 @@ type Props = {
 };
 
 export default function ConfigForm({ config, onChange }: Props) {
-    function set<K extends keyof Config>(key: K, value: Config[K]) {
+    function set<K extends keyof Config>(
+        key: K,
+        value: Config[K]
+    ) {
         onChange({ ...config, [key]: value });
     }
 
@@ -17,16 +20,15 @@ export default function ConfigForm({ config, onChange }: Props) {
         <section className="rounded-lg bg-white p-4 shadow">
             <h2 className="mb-4 font-semibold">Configurações</h2>
 
-            {/* Área */}
             <div className="space-y-2">
                 <Input
-                    label="Área considerada pequena até"
+                    label="Área pequena até"
                     value={config.tamAreaP}
                     onChange={(v) => set("tamAreaP", v)}
                     suffix="ha"
                 />
                 <Input
-                    label="Área considerada média até"
+                    label="Área média até"
                     value={config.tamAreaM}
                     onChange={(v) => set("tamAreaM", v)}
                     suffix="ha"
@@ -35,7 +37,6 @@ export default function ConfigForm({ config, onChange }: Props) {
 
             <hr className="my-4" />
 
-            {/* Preços */}
             <div className="space-y-2">
                 <Input
                     label="Preço área pequena"
@@ -59,33 +60,18 @@ export default function ConfigForm({ config, onChange }: Props) {
 
             <hr className="my-4" />
 
-            {/* Dificuldade */}
-            <label className="flex items-center gap-2 text-sm">
-                <input
-                    type="checkbox"
-                    checked={config.areaDificil}
-                    onChange={(e) => set("areaDificil", e.target.checked)}
-                />
-                Área difícil
-            </label>
-
-            {config.areaDificil && (
-                <div className="mt-2">
-                    <Input
-                        label="Adicional por dificuldade"
-                        value={config.modAreaDificil}
-                        onChange={(v) => set("modAreaDificil", v)}
-                        suffix="%"
-                    />
-                </div>
-            )}
+            <Input
+                label="Adicional por dificuldade"
+                value={config.modAreaDificil}
+                onChange={(v) => set("modAreaDificil", v)}
+                suffix="%"
+            />
 
             <hr className="my-4" />
 
-            {/* Volume */}
             <div className="space-y-2">
                 <Input
-                    label="Volume de calda padrão"
+                    label="Volume padrão"
                     value={config.volumePadrao}
                     onChange={(v) => set("volumePadrao", v)}
                     suffix="L/ha"
