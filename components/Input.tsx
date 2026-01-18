@@ -16,7 +16,9 @@ export default function Input({ label, value, onChange, suffix }: Props) {
                     type="number"
                     className="w-20 rounded border border-zinc-300 px-2 py-1 text-right"
                     value={value}
-                    onChange={(e) => onChange(Number(e.target.value))}
+                    onChange={
+                        (e) => onChange(isNaN(Number(e.target.value)) ? 0 : Number(e.target.value))
+                    }
                 />
                 {suffix && <span className="text-xs text-zinc-500">{suffix}</span>}
             </div>

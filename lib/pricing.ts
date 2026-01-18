@@ -1,39 +1,69 @@
 export type Config = {
-  maxAltura: number;
-  obstaculosAceitos: number;
+  areaDificil: boolean;          // ← AGORA AQUI
   modAreaDificil: number;
   volumePadrao: number;
   adicionalLitro: number;
-  areaPequena: number;
-  areaMedia: number;
-  precoPeq: number;
-  precoMed: number;
-  precoGra: number;
+  tamAreaP: number;
+  tamAreaM: number;
+  precoAreaP: number;
+  precoAreaM: number;
+  precoAreaG: number;
 };
 
 export type Dados = {
-  area: number;
-  altura: number;
-  obstaculos: number;
-  volume: number;
+  tamArea: number;
+  volumeEfetivo: number;
 };
 
-export function calcularPreco(config: Config, dados: Dados): number {
-  let base = config.precoGra;
+export type DetalheCalculo = {
+  tamanhoArea: string;
+  basePorHa: number;
+  adicionalDificuldade: number;
+  adicionalVolume: number;
+  precoFinalPorHa: number;
+  total: number;
+};
 
-  if (dados.area <= config.areaPequena) base = config.precoPeq;
-  else if (dados.area <= config.areaMedia) base = config.precoMed;
+export function calcularPreco(
+  config: Config,
+  dados: Dados
+): DetalheCalculo {
+  let base = config.precoAreaG;
+  let areaEfetiva = "Grande"
 
-  if (
-    dados.altura > config.maxAltura ||
-    dados.obstaculos > config.obstaculosAceitos
-  ) {
-    base *= 1 + config.modAreaDificil / 100;
+  if (dados.tamArea <= config.tamAreaP) {
+    base = config.precoAreaP;
+    areaEfetiva = "Pequena"
+  }
+  else if (dados.tamArea <= config.tamAreaM) {
+    base = config.precoAreaM;
+    areaEfetiva = "Média"
   }
 
-  if (dados.volume > config.volumePadrao) {
-    base += (dados.volume - config.volumePadrao) * config.adicionalLitro;
+  let adicionalDificuldade = 0;
+  if (config.areaDificil) {
+    adicionalDificuldade = base * (config.modAreaDificil / 100);
   }
 
-  return Math.round(base);
+  let adicionalVolume = 0;
+  if (dados.volumeEfetivo > config.volumePadrao) {
+    adicionalVolume =
+      (dados.volumeEfetivo - config.volumePadrao) *
+      config.adicionalLitro;
+  }
+
+  const precoFinalPorHa = Math.round(
+    base + adicionalDificuldade + adicionalVolume
+  );
+
+  const total = Math.round(precoFinalPorHa * dados.tamArea);
+
+  return {
+    tamanhoArea: areaEfetiva,
+    basePorHa: base,
+    adicionalDificuldade: Math.round(adicionalDificuldade),
+    adicionalVolume,
+    precoFinalPorHa,
+    total,
+  };
 }
